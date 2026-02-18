@@ -1,6 +1,8 @@
-from rest_framework import viewsets
-from .models import User, Team, Activity, Workout, Leaderboard
-from .serializers import UserSerializer, TeamSerializer, ActivitySerializer, WorkoutSerializer, LeaderboardSerializer
+
+import os
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all()
@@ -21,3 +23,16 @@ class WorkoutViewSet(viewsets.ModelViewSet):
 class LeaderboardViewSet(viewsets.ModelViewSet):
     queryset = Leaderboard.objects.all()
     serializer_class = LeaderboardSerializer
+
+# API root endpoint with dynamic Codespace URL info
+@api_view(['GET'])
+def api_root(request, format=None):
+    codespace_name = os.environ.get('CODESPACE_NAME', 'CODESPACE_NAME')
+    base_url = f'https://{codespace_name}-8000.app.github.dev/api/'
+    return Response({
+        'users': base_url + 'users/',
+        'teams': base_url + 'teams/',
+        'activities': base_url + 'activities/',
+        'workouts': base_url + 'workouts/',
+        'leaderboards': base_url + 'leaderboards/',
+    })

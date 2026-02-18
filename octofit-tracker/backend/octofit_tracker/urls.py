@@ -24,17 +24,6 @@ from rest_framework.reverse import reverse
 from django.http import JsonResponse
 from .views import UserViewSet, TeamViewSet, ActivityViewSet, WorkoutViewSet, LeaderboardViewSet
 
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'teams': reverse('team-list', request=request, format=format),
-        'activities': reverse('activity-list', request=request, format=format),
-        'workouts': reverse('workout-list', request=request, format=format),
-        'leaderboards': reverse('leaderboard-list', request=request, format=format),
-    })
-
-
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'teams', TeamViewSet, basename='team')
@@ -45,5 +34,4 @@ router.register(r'leaderboards', LeaderboardViewSet, basename='leaderboard')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('', api_root, name='api-root'),
 ]
